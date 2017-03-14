@@ -180,6 +180,7 @@ func (s *Buffer) Wrap(next http.Handler) error {
 }
 
 func (s *Buffer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	log.WithField("Request", req).Debug("vulcand/oxy/buffer: begin ServeHttp on request")
 	defer log.WithField("Request", req).Debug("vulcand/oxy/buffer: competed ServeHttp on request")
 
 	if err := s.checkLimit(req); err != nil {

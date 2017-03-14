@@ -107,6 +107,7 @@ type ConnErrHandler struct {
 }
 
 func (e *ConnErrHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, err error) {
+	log.WithField("Request", req).Debug("vulcand/oxy/connlimit: begin ServeHttp on request")
 	defer log.WithField("Request", req).Debug("vulcand/oxy/connlimit: competed ServeHttp on request")
 	if _, ok := err.(*MaxConnError); ok {
 		w.WriteHeader(429)

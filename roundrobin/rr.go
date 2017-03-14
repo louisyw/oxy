@@ -71,7 +71,7 @@ func (r *RoundRobin) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	//log which backend URL we're sending this request to
-	log.WithField("Request", req).Info("Forwarding this request to URL: %v", url)
+	log.WithFields(log.Fields{"Request": req, "ForwardURL": url}).Info("vulcand/oxy/roundrobin/rr: Forwarding this request to URL")
 
 	// make shallow copy of request before chaning anything to avoid side effects
 	newReq := *req
