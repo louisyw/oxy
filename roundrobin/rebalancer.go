@@ -121,6 +121,7 @@ func (rb *Rebalancer) Servers() []*url.URL {
 }
 
 func (rb *Rebalancer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	log.WithField("Request", req).Debug("vulcand/oxy/roundrobin/rebalancer: begin ServeHttp on request")
 	defer log.WithField("Request", req).Debug("vulcand/oxy/roundrobin/rebalancer: competed ServeHttp on request")
 	pw := &utils.ProxyWriter{W: w}
 	start := rb.clock.UtcNow()
