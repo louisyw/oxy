@@ -121,6 +121,7 @@ func (rb *Rebalancer) Servers() []*url.URL {
 }
 
 func (rb *Rebalancer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	defer log.WithField("Request", req).Debug("vulcand/oxy/roundrobin/rebalancer: competed ServeHttp on request")
 	pw := &utils.ProxyWriter{W: w}
 	start := rb.clock.UtcNow()
 	url, err := rb.next.NextServer()
@@ -128,6 +129,9 @@ func (rb *Rebalancer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		rb.errHandler.ServeHTTP(w, req, err)
 		return
 	}
+
+	//log which backend URL we're sending this request to
+	log.WithField("Request", req).Info("Forwarding this request to URL: %v", url)
 
 	// make shallow copy of request before changing anything to avoid side effects
 	newReq := *req

@@ -34,6 +34,7 @@ package stream
 import (
 	"net/http"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/vulcand/oxy/utils"
 )
 
@@ -81,5 +82,6 @@ func (s *Stream) Wrap(next http.Handler) error {
 }
 
 func (s *Stream) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	defer log.WithField("Request", req).Debug("vulcand/oxy/stream: competed ServeHttp on request")
 	s.next.ServeHTTP(w, req)
 }
