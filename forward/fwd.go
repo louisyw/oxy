@@ -397,6 +397,7 @@ func (f *httpStreamingForwarder) serveHTTP(w http.ResponseWriter, req *http.Requ
 	revproxy := httputil.NewSingleHostReverseProxy(urlcpy)
 	revproxy.FlushInterval = f.flushInterval //Flush something every 100 milliseconds
 	revproxy.ServeHTTP(pw, req)
+	revproxy.ErrorLog = log.StandardLogger()
 
 	if req.TLS != nil {
 		log.Infof("vulcand/oxy/forward/httpstream: Round trip: %v, code: %v, Length: %v, duration: %v tls:version: %x, tls:resume:%t, tls:csuite:%x, tls:server:%v",
