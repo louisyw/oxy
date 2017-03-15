@@ -375,7 +375,7 @@ func isWebsocketRequest(req *http.Request) bool {
 func (f *httpStreamingForwarder) serveHTTP(w http.ResponseWriter, req *http.Request, ctx *handlerContext) {
 	log.WithField("Request", req).Debug("vulcand/oxy/forward/httpstream: begin ServeHttp on request")
 	defer log.WithField("Request", req).Debug("vulcand/oxy/forward/httpstream: competed ServeHttp on request")
-	pw := utils.ProxyWriter{
+	pw := &utils.ProxyWriter{
 		W: w,
 	}
 	start := time.Now().UTC()
@@ -396,7 +396,7 @@ func (f *httpStreamingForwarder) serveHTTP(w http.ResponseWriter, req *http.Requ
 
 	revproxy := httputil.NewSingleHostReverseProxy(urlcpy)
 	revproxy.FlushInterval = f.flushInterval //Flush something every 100 milliseconds
-	revproxy.ServeHTTP(w, req)
+	revproxy.ServeHTTP(pw, req)
 
 	if req.TLS != nil {
 		log.Infof("vulcand/oxy/forward/httpstream: Round trip: %v, code: %v, Length: %v, duration: %v tls:version: %x, tls:resume:%t, tls:csuite:%x, tls:server:%v",
