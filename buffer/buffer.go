@@ -180,8 +180,9 @@ func (s *Buffer) Wrap(next http.Handler) error {
 }
 
 func (s *Buffer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	log.WithField("Request", req).Debug("vulcand/oxy/buffer: begin ServeHttp on request")
-	defer log.WithField("Request", req).Debug("vulcand/oxy/buffer: competed ServeHttp on request")
+	logEntry := log.WithField("Request", utils.SerializeHttpReq(req))
+	logEntry.Debug("vulcand/oxy/buffer: begin ServeHttp on request")
+	defer logEntry.Debug("vulcand/oxy/buffer: competed ServeHttp on request")
 
 	if err := s.checkLimit(req); err != nil {
 		log.Errorf("vulcand/oxy/buffer: request body over limit, err: %v", err)

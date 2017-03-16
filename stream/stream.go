@@ -82,7 +82,8 @@ func (s *Stream) Wrap(next http.Handler) error {
 }
 
 func (s *Stream) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	log.WithField("Request", req).Debug("vulcand/oxy/stream: begin ServeHttp on request")
-	defer log.WithField("Request", req).Debug("vulcand/oxy/stream: competed ServeHttp on request")
+	logEntry := log.WithField("Request", req)
+	logEntry.Debug("vulcand/oxy/stream: begin ServeHttp on request")
+	defer logEntry.Debug("vulcand/oxy/stream: competed ServeHttp on request")
 	s.next.ServeHTTP(w, req)
 }

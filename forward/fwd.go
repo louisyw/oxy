@@ -188,8 +188,9 @@ func New(setters ...optSetter) (*Forwarder, error) {
 // ServeHTTP decides which forwarder to use based on the specified
 // request and delegates to the proper implementation
 func (f *Forwarder) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	log.WithField("Request", req).Debug("vulcand/oxy/forward: begin ServeHttp on request")
-	defer log.WithField("Request", req).Debug("vulcand/oxy/forward: competed ServeHttp on request")
+	logEntry := log.WithField("Request", req)
+	logEntry.Debug("vulcand/oxy/forward: begin ServeHttp on request")
+	defer logEntry.Debug("vulcand/oxy/forward: competed ServeHttp on request")
 
 	if f.stateListener != nil {
 		f.stateListener(req.URL, StateConnected)
@@ -206,8 +207,9 @@ func (f *Forwarder) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 // serveHTTP forwards HTTP traffic using the configured transport
 func (f *httpForwarder) serveHTTP(w http.ResponseWriter, req *http.Request, ctx *handlerContext) {
-	log.WithField("Request", req).Debug("vulcand/oxy/forward/httpbuffer: begin ServeHttp on request")
-	defer log.WithField("Request", req).Debug("vulcand/oxy/forward/httpbuffer: competed ServeHttp on request")
+	logEntry := log.WithField("Request", req)
+	logEntry.Debug("vulcand/oxy/forward/httpbuffer: begin ServeHttp on request")
+	defer logEntry.Debug("vulcand/oxy/forward/httpbuffer: competed ServeHttp on request")
 
 	start := time.Now().UTC()
 	response, err := f.roundTripper.RoundTrip(f.copyRequest(req, req.URL))
@@ -280,8 +282,9 @@ func (f *httpForwarder) copyRequest(req *http.Request, u *url.URL) *http.Request
 
 // serveHTTP forwards websocket traffic
 func (f *websocketForwarder) serveHTTP(w http.ResponseWriter, req *http.Request, ctx *handlerContext) {
-	log.WithField("Request", req).Debug("vulcand/oxy/forward/websocket: begin ServeHttp on request")
-	defer log.WithField("Request", req).Debug("vulcand/oxy/forward/websocket: competed ServeHttp on request")
+	logEntry := log.WithField("Request", req)
+	logEntry.Debug("vulcand/oxy/forward/websocket: begin ServeHttp on request")
+	defer logEntry.Debug("vulcand/oxy/forward/websocket: competed ServeHttp on request")
 	outReq := f.copyRequest(req)
 	host := outReq.URL.Host
 
@@ -373,8 +376,9 @@ func isWebsocketRequest(req *http.Request) bool {
 
 // serveHTTP forwards HTTP traffic using the configured transport
 func (f *httpStreamingForwarder) serveHTTP(w http.ResponseWriter, req *http.Request, ctx *handlerContext) {
-	log.WithField("Request", req).Debug("vulcand/oxy/forward/httpstream: begin ServeHttp on request")
-	defer log.WithField("Request", req).Debug("vulcand/oxy/forward/httpstream: competed ServeHttp on request")
+	logEntry := log.WithField("Request", utils.SerializeHttpReq(req))
+	logEntry.Debug("vulcand/oxy/forward/httpstream: begin ServeHttp on request")
+	defer logEntry.Debug("vulcand/oxy/forward/httpstream: competed ServeHttp on request")
 	pw := &utils.ProxyWriter{
 		W: w,
 	}

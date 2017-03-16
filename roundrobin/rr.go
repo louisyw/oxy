@@ -63,8 +63,9 @@ func (r *RoundRobin) Next() http.Handler {
 }
 
 func (r *RoundRobin) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	log.WithField("Request", req).Debug("vulcand/oxy/roundrobin/rr: begin ServeHttp on request")
-	defer log.WithField("Request", req).Debug("vulcand/oxy/roundrobin/rr: competed ServeHttp on request")
+	logEntry := log.WithField("Request", utils.SerializeHttpReq(req))
+	logEntry.Debug("vulcand/oxy/roundrobin/rr: begin ServeHttp on request")
+	defer logEntry.Debug("vulcand/oxy/roundrobin/rr: competed ServeHttp on request")
 	url, err := r.NextServer()
 	if err != nil {
 		r.errHandler.ServeHTTP(w, req, err)
@@ -72,7 +73,7 @@ func (r *RoundRobin) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	//log which backend URL we're sending this request to
-	log.WithFields(log.Fields{"Request": req, "ForwardURL": url}).Info("vulcand/oxy/roundrobin/rr: Forwarding this request to URL")
+	log.WithFields(log.Fields{"Request": utils.SerializeHttpReq(req), "ForwardURL": url}).Info("vulcand/oxy/roundrobin/rr: Forwarding this request to URL")
 
 	// make shallow copy of request before chaning anything to avoid side effects
 	newReq := *req
