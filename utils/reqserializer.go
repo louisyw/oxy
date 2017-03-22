@@ -3,11 +3,14 @@
 package utils
 
 import (
-	"encoding/json"
 	"net/http"
+	"net/http/httputil"
 )
 
 func SerializeHttpReq(req *http.Request) string {
-	dump, _ := json.Marshal(req)
-	return string(dump)
+	if dump, err := httputil.DumpRequest(req, false); err != nil {
+		return err.Error()
+	} else {
+		return string(dump)
+	}
 }
