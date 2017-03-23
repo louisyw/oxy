@@ -376,7 +376,7 @@ func isWebsocketRequest(req *http.Request) bool {
 
 // serveHTTP forwards HTTP traffic using the configured transport
 func (f *httpStreamingForwarder) serveHTTP(w http.ResponseWriter, req *http.Request, ctx *handlerContext) {
-	logEntry := log.WithField("Request", utils.SerializeHttpReq(req))
+	logEntry := log.WithField("Request", req)
 	logEntry.Debug("vulcand/oxy/forward/httpstream: begin ServeHttp on request")
 	defer logEntry.Debug("vulcand/oxy/forward/httpstream: competed ServeHttp on request")
 	pw := &utils.ProxyWriter{

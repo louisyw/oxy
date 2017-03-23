@@ -180,7 +180,7 @@ func (s *Buffer) Wrap(next http.Handler) error {
 }
 
 func (s *Buffer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	logEntry := log.WithField("Request", utils.SerializeHttpReq(req))
+	logEntry := log.WithField("Request", req)
 	logEntry.Debug("vulcand/oxy/buffer: begin ServeHttp on request")
 	defer logEntry.Debug("vulcand/oxy/buffer: competed ServeHttp on request")
 
